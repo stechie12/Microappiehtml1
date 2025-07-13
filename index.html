@@ -5,124 +5,237 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>MicroAppie Tech | Mobile & Web Innovation</title>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
   <style>
-    /* Add your CSS styles here if needed */
+    *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-family: 'Exo 2', sans-serif; }
+    :root {
+      --radius: 14px;
+      --t: 0.25s ease;
+      --shadow: 0 12px 28px rgba(0,0,0,.25);
+      --bg: #0d0f16;
+      --surface: rgba(255,255,255,.06);
+      --text: #e8ecf2;
+      --text-muted: #9aa0ae;
+      --primary: #12f7ff;
+      --gradient: linear-gradient(135deg,#0047ff 0%,#0085ff 50%,#00f6ff 100%);
+    }
+    [data-theme='light'] {
+      --bg: #f5f8fe;
+      --surface: #ffffffd9;
+      --text: #20232a;
+      --text-muted: #4b5565;
+      --primary: #005eff;
+      --gradient: linear-gradient(135deg,#0085ff 0%,#5e9dff 50%,#9ac9ff 100%);
+    }
     body {
-      font-family: 'Exo 2', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #1e1e1e;
-      color: #ffffff;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
     }
-
     .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1150px;
+      margin: auto;
+      padding: 0 1.2rem;
     }
-
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 2.1rem;
+      border-radius: var(--radius);
+      background: var(--primary);
+      color: #000;
+      font-weight: 650;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: var(--t);
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .glass {
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    h1,h2,h3 {
+      line-height: 1.25;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .show {
+      opacity: 1;
+      transform: none;
+    }
+    header { position: relative; }
     .nav {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 1rem 0;
+      justify-content: space-between;
+      padding: 1.2rem 0;
+      z-index: 999;
     }
-
     .logo {
+      font-size: 1.35rem;
       font-weight: 700;
-      font-size: 1.5rem;
+      letter-spacing: 0.5px;
+      color: var(--primary);
     }
-
     .nav-links {
       display: flex;
-      gap: 1rem;
+      gap: 2rem;
       list-style: none;
     }
-
     .nav-links a {
-      color: #fff;
+      color: var(--text);
       text-decoration: none;
+      font-weight: 600;
+      transition: var(--t);
     }
-
-    .btn {
-      background: #ff5c5c;
-      border: none;
-      padding: 0.5rem 1rem;
-      color: #fff;
-      cursor: pointer;
-    }
-
+    .nav-links a:hover { color: var(--primary); }
     .burger {
       display: none;
       flex-direction: column;
+      gap: 5px;
       cursor: pointer;
     }
-
     .burger span {
+      width: 24px;
       height: 2px;
-      width: 25px;
-      background: #fff;
-      margin: 3px 0;
+      background: var(--text);
+      transition: var(--t);
     }
-
-    .hero {
-      text-align: center;
-      padding: 4rem 0;
+    .burger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
     }
-
-    .accent {
-      color: #ff5c5c;
-    }
-
-    .contact {
-      padding: 2rem 0;
-    }
-
-    .glass {
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      padding: 2rem;
-    }
-
-    .glass input,
-    .glass textarea {
-      width: 100%;
-      margin: 0.5rem 0;
-      padding: 0.5rem;
-      border: none;
-      border-radius: 5px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem 0;
-      background: #111;
-    }
-
-    .reveal {
+    .burger.active span:nth-child(2) {
       opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s ease;
     }
-
-    .reveal.show {
-      opacity: 1;
-      transform: translateY(0);
+    .burger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
     }
-
-    @media (max-width: 768px) {
+    .hero {
+      padding: 7rem 0;
+      text-align: center;
+      background: var(--gradient);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg,rgba(13,15,22,.88),rgba(13,15,22,.2));
+      mix-blend-mode: multiply;
+      z-index: 0;
+    }
+    .hero > * { position: relative; z-index: 1; }
+    .hero h1 {
+      font-size: 3.1rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    .accent { color: var(--primary); }
+    .hero p {
+      max-width: 580px;
+      margin: 1.3rem auto 2.3rem;
+      color: #dbe5ff;
+    }
+    section { padding: 5.5rem 0; }
+    .grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+    .timeline {
+      counter-reset: step;
+      list-style: none;
+      margin-top: 2.5rem;
+    }
+    .timeline li {
+      position: relative;
+      padding-left: 3rem;
+      margin-bottom: 1.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .timeline li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .cta {
+      background: var(--gradient);
+      color: #fff;
+      text-align: center;
+      padding: 5rem 1rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    input, textarea {
+      padding: 0.85rem 1rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--surface);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+    button[type=submit] {
+      border: none;
+      cursor: pointer;
+    }
+    footer {
+      padding: 3rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    @media(max-width: 740px) {
       .nav-links {
-        display: none;
+        position: absolute;
+        top: 70px;
+        right: 1.2rem;
+        background: var(--surface);
         flex-direction: column;
+        width: 200px;
+        padding: 1.4rem;
+        border-radius: var(--radius);
+        backdrop-filter: blur(14px);
+        opacity: 0;
+        pointer-events: none;
+        transition: var(--t);
       }
-
       .nav-links.show {
-        display: flex;
+        opacity: 1;
+        pointer-events: auto;
       }
-
-      .burger {
-        display: flex;
-      }
+      .burger { display: flex; }
+      .hero h1 { font-size: 2.25rem; }
     }
   </style>
 </head>
@@ -135,91 +248,12 @@
         <li><a href="#work">Work</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <button class="btn" id="themeToggle">🌙</button>
-      <div class="burger" id="burger">
-        <span></span><span></span><span></span>
-      </div>
+      <button class="btn" id="themeToggle" style="padding: 0.4rem 1rem">🌙</button>
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
     </nav>
     <div class="hero">
       <div class="container">
-        <h1 class="reveal">We craft <span class="accent">next-gen</span> apps that <span class="accent">ignite</span> your business.</h1>
-        <p class="reveal">Custom iOS, Android & web solutions engineered for scale, security and sheer user joy.</p>
-        <a href="#contact" class="btn reveal">Start a Project</a>
-      </div>
-    </div>
-  </header>
+        <h1 class="reveal">We craft
 
-  <!-- Contact Section -->
-  <section id="contact" class="contact container">
-    <h2 class="reveal">Connect with us</h2>
-    <form id="contactForm" class="glass reveal" action="https://eo7kmme6avxvn2n.m.pipedream.net" method="POST">
-      <input type="text" name="user_name" placeholder="Your name" required>
-      <input type="email" name="user_email" placeholder="Email" required>
-      <input type="text" name="company" placeholder="Company (optional)">
-      <textarea name="message" placeholder="Project brief" required></textarea>
-      <button type="submit" class="btn">Send Message</button>
-    </form>
-  </section>
-
-  <footer>
-    <div class="container">
-      &copy; <span id="year"></span> MicroAppie Tech. Code. Design. Future.
-    </div>
-  </footer>
-
-  <script>
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Theme toggle
-    const themeToggle = document.getElementById('themeToggle');
-    const root = document.documentElement;
-    const saved = localStorage.getItem('theme');
-
-    if (saved) {
-      root.dataset.theme = saved;
-      updateIcon();
-    }
-
-    themeToggle.addEventListener('click', () => {
-      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', root.dataset.theme);
-      updateIcon();
-    });
-
-    function updateIcon() {
-      themeToggle.textContent = root.dataset.theme === 'dark' ? '🌙' : '☀️';
-    }
-
-    // Burger menu toggle
-    const burger = document.getElementById('burger');
-    const navLinks = document.getElementById('navLinks');
-
-    burger.addEventListener('click', () => {
-      burger.classList.toggle('active');
-      navLinks.classList.toggle('show');
-    });
-
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        burger.classList.remove('active');
-        navLinks.classList.remove('show');
-      });
-    });
-
-    // Reveal animation
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('show');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-  </script>
-</body>
-</html>
 
 
